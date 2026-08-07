@@ -1,0 +1,98 @@
+# =========================
+# Node / React / Vite
+# =========================
+node_modules/
+dist/
+dist-ssr/
+.output/
+.vinxi/
+.tanstack/
+.nitro/
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+backend/venv/
+
+# =========================
+# Environment variables
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Medical datasets
+# =========================
+backend/data/
+FractureAtlas.zip
+FractureAtlas/
+
+# Large archives
+*.zip
+*.rar
+*.7z
+
+# =========================
+# ML Models / Training Files
+# =========================
+*.pth
+*.pt
+*.onnx
+*.h5
+*.keras
+
+backend/app/train_status.json
+backend/app/train_status.json.tmp
+
+# =========================
+# Jupyter
+# =========================
+.ipynb_checkpoints/
+
+# =========================
+# Editors / IDE
+# =========================
+.vscode/
+!.vscode/extensions.json
+.idea/
+.DS_Store
+
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# =========================
+# Local AI / Workspace
+# =========================
+.gemini/
+.system_generated/
+.lovable/
+.medvision-config/
+
+# =========================
+# Cloudflare / Wrangler
+# =========================
+.wrangler/
+.dev.vars
