@@ -62,38 +62,6 @@ function UploadPage() {
   const [patient, setPatient] = useState({ id: "", name: "", age: "", gender: "", notes: "" });
   const [stage, setStage] = useState(-1);
 
-  useEffect(() => {
-    if (type !== "bone") {
-      setBodyPart("");
-      setBodyPartConfidence(null);
-      return;
-    }
-    if (!rawFile) return;
-
-    let cancelled = false;
-    setDetectingBodyPart(true);
-    api.analyses
-      .detectBodyPart(rawFile)
-      .then((result) => {
-        if (cancelled) return;
-        setBodyPart(result.bodyPart);
-        setBodyPartConfidence(result.confidence);
-        toast.success(`Detected ${result.bodyPart} (${result.confidence}% confidence)`);
-      })
-      .catch((err) => {
-        if (cancelled) return;
-        toast.error("Could not auto-detect body part — please select manually.");
-        console.error(err);
-      })
-      .finally(() => {
-        if (!cancelled) setDetectingBodyPart(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [type, rawFile]);
-
   const accept = (list: FileList | null) => {
     const f = list?.[0];
     if (!f) return;
@@ -105,7 +73,59 @@ function UploadPage() {
     setRawFile(f);
     setFile({ name: f.name, size: f.size, url: URL.createObjectURL(f) });
     toast.success(`${f.name} ready for analysis`);
+
+    // Automatically detect body part and study type on upload
+    setDetectingBodyPart(true);
+    api.analyses
+      .detectBodyPart(f)
+      .then((result) => {
+        if (result.analysisType === "chest" || result.bodyPart === "Chest") {
+          setType("chest");
+          setBodyPart("");
+          setBodyPartConfidence(result.confidence);
+          toast.success(`Auto-detected: Chest radiograph (${result.confidence}% confidence)`);
+        } else {
+          setType("bone");
+          setBodyPart(result.bodyPart);
+          setBodyPartConfidence(result.confidence);
+          toast.success(`Auto-detected: ${result.bodyPart} (${result.confidence}% confidence)`);
+        }
+      })
+      .catch((err) => {
+        console.error("Auto-detect failed:", err);
+      })
+      .finally(() => {
+        setDetectingBodyPart(false);
+      });
   };
+
+  // If user manually switches to Bone and bodyPart is empty, trigger detection
+  useEffect(() => {
+    if (type !== "bone" || !rawFile || bodyPart || detectingBodyPart) return;
+
+    let cancelled = false;
+    setDetectingBodyPart(true);
+    api.analyses
+      .detectBodyPart(rawFile)
+      .then((result) => {
+        if (cancelled) return;
+        const part = result.bodyPart === "Chest" ? "Hand" : result.bodyPart;
+        setBodyPart(part);
+        setBodyPartConfidence(result.confidence);
+        toast.success(`Auto-detected body part: ${part} (${result.confidence}% confidence)`);
+      })
+      .catch((err) => {
+        if (cancelled) return;
+        console.error(err);
+      })
+      .finally(() => {
+        if (!cancelled) setDetectingBodyPart(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [type, rawFile, bodyPart, detectingBodyPart]);
 
   const analyzing = stage >= 0;
 
@@ -114,14 +134,11 @@ function UploadPage() {
       toast.error("Upload an X-ray image first.");
       return;
     }
-    if (type === "bone" && !bodyPart && !detectingBodyPart) {
-      toast.error("Select the body part for fracture analysis.");
-      return;
-    }
     if (detectingBodyPart) {
       toast.error("Still detecting body part — please wait a moment.");
       return;
     }
+    const resolvedBodyPart = type === "bone" ? (bodyPart || "Hand") : undefined;
     setStage(0);
     let i = 0;
     const tick = window.setInterval(() => {
@@ -129,7 +146,7 @@ function UploadPage() {
       if (i >= STAGES.length) {
         window.clearInterval(tick);
         api.analyses.upload(type, rawFile, {
-          bodyPart: type === "bone" ? bodyPart : undefined,
+          bodyPart: resolvedBodyPart,
           patientId: patient.id || undefined,
           patientName: patient.name || undefined,
           age: patient.age ? Number(patient.age) : undefined,

@@ -103,7 +103,7 @@ function AnalysisDetail() {
   const boxes =
     record.type === "chest"
       ? [{ x: 52, y: 30, w: 26, h: 24, label: `${record.primary} ${record.confidence}%` }]
-      : [{ x: 38, y: 46, w: 24, h: 18, label: `${record.primary} ${record.confidence}%` }];
+      : [];
 
   return (
     <div className="mx-auto max-w-7xl">

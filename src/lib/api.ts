@@ -109,7 +109,7 @@ export const api = {
     },
   },
   analyses: {
-    detectBodyPart: async (imageFile: File): Promise<{ bodyPart: string; confidence: number; method: string }> => {
+    detectBodyPart: async (imageFile: File): Promise<{ bodyPart: string; analysisType?: string; confidence: number; method: string }> => {
       const formData = new FormData();
       formData.append("image", imageFile);
 
@@ -124,7 +124,7 @@ export const api = {
         throw new Error(`Detection failed ${response.status}: ${errText}`);
       }
 
-      return response.json() as Promise<{ bodyPart: string; confidence: number; method: string }>;
+      return response.json() as Promise<{ bodyPart: string; analysisType?: string; confidence: number; method: string }>;
     },
     list: async (filters?: { type?: string; patientId?: string; status?: string }): Promise<AnalysisRecord[]> => {
       const params = new URLSearchParams();

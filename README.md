@@ -160,13 +160,35 @@ Create a modern, professional, clean, and clinical medical web application front
 
 Make the interface feel like a real medical product used in hospitals – calm, precise, trustworthy, and highly usable by busy doctors.
 
-## Development
+## Development & Setup
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+This project consists of a React frontend and a FastAPI backend. To allow running it anywhere (regardless of folder renaming or machine moving), use the helper scripts or follow the commands below.
 
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
+### ⚙️ Quick Start (Recommended)
+* **Install/Repair Dependencies**: Double-click **`install.bat`** in the project root directory. This sets up a clean, portable Python virtual environment.
+* **Run Backend Server**: Double-click **`run-backend.bat`** in the project root directory. This launches the Uvicorn server on `http://localhost:8000`.
+
+---
+
+### 💻 Manual Startup
+
+#### 1. Backend Server (FastAPI)
+Navigate to the `backend/` directory:
+```powershell
+cd backend
+```
+* **Correct Command For Portability**: Always run Python modules through `python -m` to bypass absolute path errors inside virtualenvs:
+  ```powershell
+  # Activate venv
+  .\venv\Scripts\Activate.ps1
+  # Run Server (Always works even if folder is moved/renamed!)
+  python -m uvicorn app.main:app --reload --port 8000
+  ```
+
+#### 2. Frontend Client (React)
+Navigate to the root directory, install npm packages, and start the Vite dev server:
+```powershell
+npm install
 npm run dev
 ```
+Open **`http://localhost:8080`** in your browser.

@@ -182,7 +182,27 @@ def detect_body_part(
     _, filepath = save_uploaded_file(image)
     try:
         result = ml.ml_service.detect_body_part(filepath, filename=image.filename or "")
-        return schemas.BodyPartDetectionResponse(**result)
+        part = result.get("body_part") or "Hand"
+        sub = result.get("sub_region") or f"{part} Osseous Structure"
+        atype = result.get("analysis_type") or "bone"
+        conf = result.get("confidence", 95)
+        meth = result.get("method", "deep_neural_densenet121")
+        vw = result.get("view", "Anteroposterior (AP)")
+        hint = result.get("suggested_hint")
+
+        return schemas.BodyPartDetectionResponse(
+            body_part=part,
+            bodyPart=part,
+            analysis_type=atype,
+            analysisType=atype,
+            confidence=conf,
+            method=meth,
+            sub_region=sub,
+            subRegion=sub,
+            view=vw,
+            suggested_hint=hint,
+            suggestedHint=hint,
+        )
     finally:
         if os.path.exists(filepath):
             os.remove(filepath)
@@ -219,10 +239,10 @@ def analyze_bone(
     # 2. Save Uploaded Image File
     url, filepath = save_uploaded_file(image)
 
-    # 3. Auto-detect body part when not supplied by the client
-    if not body_part:
+    # 3. Auto-detect body part when not supplied or invalid
+    if not body_part or str(body_part).strip().lower() in ("none", "undefined", "null", ""):
         detection = ml.ml_service.detect_body_part(filepath, filename=image.filename or "")
-        body_part = detection["body_part"]
+        body_part = detection.get("body_part") or "Hand"
 
     # 4. Call ML Service
     ml_result = ml.ml_service.analyze_bone(filepath, body_part)

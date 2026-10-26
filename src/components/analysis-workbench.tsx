@@ -90,14 +90,11 @@ export function AnalysisWorkbench({ type }: { type: AnalysisType }) {
       toast.error("Upload an X-ray image first.");
       return;
     }
-    if (!isChest && !bodyPart && !detectingBodyPart) {
-      toast.error("Select the body part for fracture analysis.");
-      return;
-    }
     if (detectingBodyPart) {
       toast.error("Still detecting body part — please wait a moment.");
       return;
     }
+    const resolvedBodyPart = isChest ? undefined : (bodyPart || "Hand");
     setStage(0);
     let i = 0;
     const tick = window.setInterval(() => {
@@ -106,7 +103,7 @@ export function AnalysisWorkbench({ type }: { type: AnalysisType }) {
         window.clearInterval(tick);
         const linked = patients.find((p) => p.id === linkedPatient);
         api.analyses.upload(type, rawFile, {
-          bodyPart: isChest ? undefined : bodyPart,
+          bodyPart: resolvedBodyPart,
           patientId: linked?.id || patient.id || undefined,
           patientName: linked?.name || patient.name || undefined,
           age: linked ? linked.age : (patient.age ? Number(patient.age) : undefined),

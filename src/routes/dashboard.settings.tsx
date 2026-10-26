@@ -26,6 +26,7 @@ import { Slider } from "@/components/ui/slider";
 import { Progress } from "@/components/ui/progress";
 import { api, type TrainingStatus } from "@/lib/api";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/dashboard/settings")({
   head: () => ({
@@ -164,7 +165,10 @@ function SettingsPage() {
       </Card>
 
       {/* Model Retraining Card */}
-      <Card className="shadow-soft overflow-hidden">
+      <Card className={cn(
+        "shadow-soft overflow-hidden transition-all duration-300",
+        trainingStatus.status === "running" && "pulse-glow border-primary/30"
+      )}>
         <CardHeader className="bg-gradient-to-r from-primary/5 via-accent/5 to-transparent border-b">
           <div className="flex items-center gap-2.5">
             <Brain className="h-5 w-5 text-primary animate-pulse" />

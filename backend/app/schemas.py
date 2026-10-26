@@ -9,7 +9,8 @@ class CamelModel(BaseModel):
     model_config = ConfigDict(
         alias_generator=to_camel,
         populate_by_name=True,
-        from_attributes=True
+        from_attributes=True,
+        protected_namespaces=()
     )
 
 class PatientBase(CamelModel):
@@ -53,10 +54,20 @@ class AnalysisCreate(CamelModel):
 class AnalysisUpdateStatus(CamelModel):
     status: str
 
-class BodyPartDetectionResponse(CamelModel):
+class BodyPartDetectionResponse(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
     body_part: str
+    bodyPart: Optional[str] = None
+    analysis_type: Optional[str] = "bone"
+    analysisType: Optional[str] = "bone"
     confidence: int
     method: str
+    sub_region: Optional[str] = None
+    subRegion: Optional[str] = None
+    view: Optional[str] = None
+    suggested_hint: Optional[str] = None
+    suggestedHint: Optional[str] = None
 
 class AnalysisResponse(CamelModel):
     id: str

@@ -28,7 +28,7 @@ function Stop-PortListener {
                 Stop-Process -Id $pid -Force -ErrorAction Stop
             }
         } catch {
-            Write-Warning "Could not stop PID $pid: $_"
+            Write-Warning "Could not stop PID ${pid}: $_"
         }
     }
 
@@ -47,6 +47,6 @@ Write-Host "Starting MedVision AI backend on http://localhost:$Port"
 Stop-PortListener -TargetPort $Port
 
 & ".\venv\Scripts\Activate.ps1"
-uvicorn app.main:app --reload --host 127.0.0.1 --port $Port
+python -m uvicorn app.main:app --reload --host 127.0.0.1 --port $Port
 
 Pop-Location

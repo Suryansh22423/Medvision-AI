@@ -186,3 +186,62 @@
 @utility shadow-card {
   box-shadow: var(--shadow-card);
 }
+
+/* Premium Medical/PACS workstation additions */
+.dark .bg-card, .dark .card {
+  background-color: oklch(0.21 0.024 254 / 0.65) !important;
+  backdrop-filter: blur(12px) !important;
+  border-color: oklch(1 0 0 / 7%) !important;
+  box-shadow: 0 4px 30px oklch(0 0 0 / 0.25), inset 0 1px 1px oklch(1 0 0 / 5%) !important;
+}
+
+.dark .bg-sidebar {
+  background-color: oklch(0.18 0.025 254) !important;
+  border-right: 1px solid oklch(1 0 0 / 6%) !important;
+}
+
+.dark header {
+  background-color: oklch(0.19 0.025 254 / 0.75) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+.dark select, .dark input, .dark textarea, .dark .select-trigger {
+  background-color: oklch(0.24 0.028 254 / 0.7) !important;
+  border-color: oklch(1 0 0 / 10%) !important;
+}
+
+@keyframes pulse-clinical-glow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 oklch(0.68 0.12 240 / 0.4);
+  }
+  50% {
+    box-shadow: 0 0 12px 4px oklch(0.68 0.12 240 / 0.25);
+  }
+}
+
+.pulse-glow {
+  animation: pulse-clinical-glow 3s infinite ease-in-out;
+}
+
+/* Clean, custom styled scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: oklch(0.53 0.14 248 / 0.25);
+  border-radius: 9999px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: oklch(1 0 0 / 12%);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.53 0.14 248 / 0.45);
+}

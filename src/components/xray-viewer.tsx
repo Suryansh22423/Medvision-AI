@@ -120,17 +120,46 @@ export function XrayViewer({
             boxes.map((b) => (
               <div
                 key={b.label}
-                className="absolute rounded-sm border-2 border-teal/90 bg-teal/10"
+                className="absolute rounded-sm border-2 border-teal/90 bg-teal/10 shadow-[0_0_8px_rgba(20,184,166,0.3)]"
                 style={{ left: `${b.x}%`, top: `${b.y}%`, width: `${b.w}%`, height: `${b.h}%` }}
               >
-                <span className="absolute -top-6 left-0 whitespace-nowrap rounded bg-teal px-1.5 py-0.5 text-[10px] font-semibold text-teal-foreground">
+                <span className="absolute -top-6 left-0 whitespace-nowrap rounded bg-teal px-1.5 py-0.5 text-[10px] font-semibold text-teal-foreground shadow-sm">
                   {b.label}
                 </span>
               </div>
             ))}
         </div>
-        <div className="pointer-events-none absolute bottom-2 left-2 rounded bg-slate-900/70 px-2 py-1 font-mono text-[10px] text-slate-200">
-          zoom {zoom.toFixed(2)}× · B{brightness} C{contrast}
+        
+        {/* PACS Style Corner Overlays */}
+        <div className="pointer-events-none absolute left-3 top-3 font-mono text-[10px] leading-tight text-slate-400/90 select-none">
+          <p className="font-semibold text-slate-200 uppercase">{alt.replace("X-ray for ", "").toUpperCase()}</p>
+          <p>MODALITY: DX RADIOGRAPHY</p>
+          <p>SOURCE: AI ACCELERATED CADx</p>
+        </div>
+        
+        <div className="pointer-events-none absolute right-3 top-3 text-right font-mono text-[10px] leading-tight text-slate-400/90 select-none">
+          <p className="font-semibold text-slate-200">MEDVISION CLINICAL SYS</p>
+          <p>{new Date().toLocaleDateString(undefined, { year: 'numeric', month: '2-digit', day: '2-digit' })}</p>
+          <p>120 kVp · 320 mA</p>
+        </div>
+
+        <div className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 font-display text-lg font-bold text-slate-600/40 select-none">
+          R
+        </div>
+
+        <div className="pointer-events-none absolute inset-0 flex items-center justify-center opacity-15">
+          <div className="h-8 w-[1px] bg-slate-300" />
+          <div className="h-[1px] w-8 bg-slate-300" />
+        </div>
+
+        <div className="pointer-events-none absolute bottom-3 left-3 font-mono text-[10px] leading-tight text-slate-400/90 select-none">
+          <p>ZOOM: {zoom.toFixed(2)}×</p>
+          <p>W: {Math.round(contrast * 4)} L: {Math.round(brightness * 2.5)}</p>
+        </div>
+
+        <div className="pointer-events-none absolute bottom-3 right-3 text-right font-mono text-[10px] leading-tight text-slate-400/90 select-none">
+          <p>FPS: 60.0</p>
+          <p>SCALE: 0.15 mm/px</p>
         </div>
       </div>
 
